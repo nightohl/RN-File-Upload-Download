@@ -5,6 +5,8 @@ import {
   base64,
   tmpFileNoExt,
   tmpFileWithExt,
+  iosFileDownload,
+  iosFileDownloadOpenDocument,
 } from './src/rn-fetch-blob/download';
 
 const App = () => {
@@ -13,6 +15,10 @@ const App = () => {
   const onBase64Download = () => base64(imageLink);
   const onTmpFileNoExtDownload = () => tmpFileNoExt(imageLink);
   const onTmpFileWithExtDownload = () => tmpFileWithExt(imageLink);
+
+  const onIosFileDownload = () => iosFileDownload(imageLink);
+  const onIosFileDownloadOpenDocument = () =>
+    iosFileDownloadOpenDocument(imageLink);
 
   return (
     <SafeAreaView style={styles.rootContainer}>
@@ -27,6 +33,11 @@ const App = () => {
           title="- tmp file with extension"
           onPress={onTmpFileWithExtDownload}
         />
+        <Button
+          title="- ios openDocument"
+          onPress={onIosFileDownloadOpenDocument}
+        />
+        <Button title="- ios preview document" onPress={onIosFileDownload} />
       </View>
     </SafeAreaView>
   );
