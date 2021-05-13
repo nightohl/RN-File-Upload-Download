@@ -1,115 +1,92 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * Generated with the TypeScript template
- * https://github.com/react-native-community/react-native-template-typescript
- *
- * @format
- */
+import React from 'react';
+import {SafeAreaView, StyleSheet, View, Text} from 'react-native';
 
- import React from 'react';
- import {
-   SafeAreaView,
-   ScrollView,
-   StatusBar,
-   StyleSheet,
-   Text,
-   useColorScheme,
-   View,
- } from 'react-native';
+import {
+  base64,
+  tmpFileNoExt,
+  tmpFileWithExt,
+  iosFileDownload,
+  iosFileDownloadOpenDocument,
+  androidMediaScanner,
+  androidDownloadManager,
+  requestStorageWritePermission,
+} from './src/rn-fetch-blob/download';
 
- import {
-   Colors,
-   DebugInstructions,
-   Header,
-   LearnMoreLinks,
-   ReloadInstructions,
- } from 'react-native/Libraries/NewAppScreen';
+import TextButton from './src/components/TextButton';
 
- const Section: React.FC<{
-   title: string;
- }> = ({children, title}) => {
-   const isDarkMode = useColorScheme() === 'dark';
-   return (
-     <View style={styles.sectionContainer}>
-       <Text
-         style={[
-           styles.sectionTitle,
-           {
-             color: isDarkMode ? Colors.white : Colors.black,
-           },
-         ]}>
-         {title}
-       </Text>
-       <Text
-         style={[
-           styles.sectionDescription,
-           {
-             color: isDarkMode ? Colors.light : Colors.dark,
-           },
-         ]}>
-         {children}
-       </Text>
-     </View>
-   );
- };
+const App = () => {
+  const imageLink =
+    'https://thumbs.dreamstime.com/z/environment-earth-day-hands-trees-growing-seedlings-bokeh-green-background-female-hand-holding-tree-nature-field-gra-130247647.jpg';
+  const onBase64Download = () => base64(imageLink);
+  const onTmpFileNoExtDownload = () => tmpFileNoExt(imageLink);
+  const onTmpFileWithExtDownload = () => tmpFileWithExt(imageLink);
 
- const App = () => {
-   const isDarkMode = useColorScheme() === 'dark';
+  const onIosFileDownload = () => iosFileDownload(imageLink);
+  const onIosFileDownloadOpenDocument = () =>
+    iosFileDownloadOpenDocument(imageLink);
 
-   const backgroundStyle = {
-     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-   };
+  const onAndroidMediaScanner = () => androidMediaScanner(imageLink);
+  const onAndroidDownloadManager = () => androidDownloadManager(imageLink);
 
-   return (
-     <SafeAreaView style={backgroundStyle}>
-       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-       <ScrollView
-         contentInsetAdjustmentBehavior="automatic"
-         style={backgroundStyle}>
-         <Header />
-         <View
-           style={{
-             backgroundColor: isDarkMode ? Colors.black : Colors.white,
-           }}>
-           <Section title="Step One">
-             Edit <Text style={styles.highlight}>App.js</Text> to change this
-             screen and then come back to see your edits.
-           </Section>
-           <Section title="See Your Changes">
-             <ReloadInstructions />
-           </Section>
-           <Section title="Debug">
-             <DebugInstructions />
-           </Section>
-           <Section title="Learn More">
-             Read the docs to discover what to do next:
-           </Section>
-           <LearnMoreLinks />
-         </View>
-       </ScrollView>
-     </SafeAreaView>
-   );
- };
+  return (
+    <SafeAreaView style={styles.rootContainer}>
+      <View style={styles.buttonContainer}>
+        <Text style={styles.title}>Download</Text>
+        <TextButton
+          title="- base64 encoded string"
+          onPress={onBase64Download}
+        />
+        <TextButton
+          title="- tmp file with no extension"
+          onPress={onTmpFileNoExtDownload}
+        />
+        <TextButton
+          title="- tmp file with extension"
+          onPress={onTmpFileWithExtDownload}
+        />
+        <TextButton
+          title="- ios openDocument"
+          onPress={onIosFileDownloadOpenDocument}
+        />
+        <TextButton
+          title="- ios preview document"
+          onPress={onIosFileDownload}
+        />
+        <TextButton
+          title="- android media scanner"
+          onPress={onAndroidMediaScanner}
+        />
+        <TextButton
+          title="- android DownloadManager"
+          onPress={onAndroidDownloadManager}
+        />
+        <TextButton
+          title="- android storage write permission"
+          onPress={requestStorageWritePermission}
+        />
+      </View>
+    </SafeAreaView>
+  );
+};
 
- const styles = StyleSheet.create({
-   sectionContainer: {
-     marginTop: 32,
-     paddingHorizontal: 24,
-   },
-   sectionTitle: {
-     fontSize: 24,
-     fontWeight: '600',
-   },
-   sectionDescription: {
-     marginTop: 8,
-     fontSize: 18,
-     fontWeight: '400',
-   },
-   highlight: {
-     fontWeight: '700',
-   },
- });
+const styles = StyleSheet.create({
+  rootContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    margin: 10,
+  },
+  buttonContainer: {
+    alignItems: 'flex-start',
+    borderWidth: 1,
+    borderRadius: 30,
+    padding: 15,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: '600',
+    alignSelf: 'center',
+    padding: 10,
+  },
+});
 
- export default App;
+export default App;
