@@ -1,4 +1,4 @@
-import {Platform} from 'react-native';
+import {Platform, PermissionsAndroid} from 'react-native';
 import RNFetchBlob from 'rn-fetch-blob';
 
 // send http request in a new thread (using native code)
@@ -137,4 +137,26 @@ export const androidDownloadManager = (fileLink: string) => {
       // the path of downloaded file
       resp.path();
     });
+};
+
+export const requestStorageWritePermission = async () => {
+  try {
+    const granted = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+      {
+        title: 'Write External Storage Permission!',
+        message: 'I need this permission.',
+        buttonNeutral: 'Ask Me Later',
+        buttonNegative: 'Cancel',
+        buttonPositive: 'OK',
+      },
+    );
+    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+      console.log('You can write external storage now.');
+    } else {
+      console.log('External Write Permission denied');
+    }
+  } catch (err) {
+    console.warn(err);
+  }
 };

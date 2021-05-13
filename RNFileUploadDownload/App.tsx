@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  Button,
-  View,
-  Text,
-  PermissionsAndroid,
-} from 'react-native';
+import {SafeAreaView, StyleSheet, View, Text} from 'react-native';
 
 import {
   base64,
@@ -16,7 +9,10 @@ import {
   iosFileDownloadOpenDocument,
   androidMediaScanner,
   androidDownloadManager,
+  requestStorageWritePermission,
 } from './src/rn-fetch-blob/download';
+
+import TextButton from './src/components/TextButton';
 
 const App = () => {
   const imageLink =
@@ -36,30 +32,36 @@ const App = () => {
     <SafeAreaView style={styles.rootContainer}>
       <View style={styles.buttonContainer}>
         <Text style={styles.title}>Download</Text>
-        <Button title="- base64 encoded string" onPress={onBase64Download} />
-        <Button
+        <TextButton
+          title="- base64 encoded string"
+          onPress={onBase64Download}
+        />
+        <TextButton
           title="- tmp file with no extension"
           onPress={onTmpFileNoExtDownload}
         />
-        <Button
+        <TextButton
           title="- tmp file with extension"
           onPress={onTmpFileWithExtDownload}
         />
-        <Button
+        <TextButton
           title="- ios openDocument"
           onPress={onIosFileDownloadOpenDocument}
         />
-        <Button title="- ios preview document" onPress={onIosFileDownload} />
-        <Button
+        <TextButton
+          title="- ios preview document"
+          onPress={onIosFileDownload}
+        />
+        <TextButton
           title="- android media scanner"
           onPress={onAndroidMediaScanner}
         />
-        <Button
+        <TextButton
           title="- android DownloadManager"
           onPress={onAndroidDownloadManager}
         />
-        <Button
-          title="- request external storage write permission"
+        <TextButton
+          title="- android storage write permission"
           onPress={requestStorageWritePermission}
         />
       </View>
@@ -86,27 +88,5 @@ const styles = StyleSheet.create({
     padding: 10,
   },
 });
-
-const requestStorageWritePermission = async () => {
-  try {
-    const granted = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-      {
-        title: 'Write External Storage Permission!',
-        message: 'I need this permission.',
-        buttonNeutral: 'Ask Me Later',
-        buttonNegative: 'Cancel',
-        buttonPositive: 'OK',
-      },
-    );
-    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-      console.log('You can write external storage now.');
-    } else {
-      console.log('External Write Permission denied');
-    }
-  } catch (err) {
-    console.warn(err);
-  }
-};
 
 export default App;
