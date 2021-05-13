@@ -1,5 +1,12 @@
 import React from 'react';
-import {SafeAreaView, StyleSheet, Button, View, Text} from 'react-native';
+import {
+  SafeAreaView,
+  StyleSheet,
+  Button,
+  View,
+  Text,
+  PermissionsAndroid,
+} from 'react-native';
 
 import {
   base64,
@@ -7,6 +14,8 @@ import {
   tmpFileWithExt,
   iosFileDownload,
   iosFileDownloadOpenDocument,
+  androidMediaScanner,
+  androidDownloadManager,
 } from './src/rn-fetch-blob/download';
 
 const App = () => {
@@ -19,6 +28,9 @@ const App = () => {
   const onIosFileDownload = () => iosFileDownload(imageLink);
   const onIosFileDownloadOpenDocument = () =>
     iosFileDownloadOpenDocument(imageLink);
+
+  const onAndroidMediaScanner = () => androidMediaScanner(imageLink);
+  const onAndroidDownloadManager = () => androidDownloadManager(imageLink);
 
   return (
     <SafeAreaView style={styles.rootContainer}>
@@ -38,6 +50,18 @@ const App = () => {
           onPress={onIosFileDownloadOpenDocument}
         />
         <Button title="- ios preview document" onPress={onIosFileDownload} />
+        <Button
+          title="- android media scanner"
+          onPress={onAndroidMediaScanner}
+        />
+        <Button
+          title="- android DownloadManager"
+          onPress={onAndroidDownloadManager}
+        />
+        <Button
+          title="- request external storage write permission"
+          onPress={requestStorageWritePermission}
+        />
       </View>
     </SafeAreaView>
   );
@@ -62,5 +86,27 @@ const styles = StyleSheet.create({
     padding: 10,
   },
 });
+
+const requestStorageWritePermission = async () => {
+  try {
+    const granted = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+      {
+        title: 'Write External Storage Permission!',
+        message: 'I need this permission.',
+        buttonNeutral: 'Ask Me Later',
+        buttonNegative: 'Cancel',
+        buttonPositive: 'OK',
+      },
+    );
+    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+      console.log('You can write external storage now.');
+    } else {
+      console.log('External Write Permission denied');
+    }
+  } catch (err) {
+    console.warn(err);
+  }
+};
 
 export default App;

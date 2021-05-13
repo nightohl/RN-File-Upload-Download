@@ -42,7 +42,7 @@ export const tmpFileNoExt = (fileLink: string) =>
 export const tmpFileWithExt = (fileLink: string) =>
   RNFetchBlob.config({
     fileCache: true,
-    appendExt: 'png', // ImageView 컴포넌트에 첨부할 때 확장자가 있어야하므로, 'jpg', 'png' 등 확장자 추가
+    appendExt: 'jpg', // ImageView 컴포넌트에 첨부할 때 확장자가 있어야하므로, 'jpg', 'png' 등 확장자 추가
   })
     .fetch('GET', fileLink, {
       //some headers ..
@@ -56,7 +56,7 @@ export const tmpFileWithExt = (fileLink: string) =>
 export const iosFileDownloadOpenDocument = (fileLink: string) =>
   RNFetchBlob.config({
     fileCache: true,
-    appendExt: 'png', // ImageView 컴포넌트에 첨부할 때 확장자가 있어야하므로, 'jpg', 'png' 등 확장자 추가
+    appendExt: 'jpg', // ImageView 컴포넌트에 첨부할 때 확장자가 있어야하므로, 'jpg', 'png' 등 확장자 추가
   })
     .fetch('GET', fileLink, {
       //some headers ..
@@ -81,7 +81,7 @@ export const iosFileDownload = (fileLink: string) => {
     ios: dirs.DocumentDir,
     android: dirs.DocumentDir,
   });
-  const filePath = `${dirToSave}/Test.png`;
+  const filePath = `${dirToSave}/Test.jpg`;
 
   RNFetchBlob.config({
     path: filePath,
@@ -97,5 +97,44 @@ export const iosFileDownload = (fileLink: string) => {
         ' errorMessage : ',
         errorMessage,
       );
+    });
+};
+
+export const androidMediaScanner = (fileLink: string) => {
+  RNFetchBlob.config({
+    // DCIMDir is in external storage
+    path: RNFetchBlob.fs.dirs.DocumentDir + '/test.jpg',
+  })
+    .fetch('GET', fileLink)
+    .then(res => {
+      console.log('result path : ', res.path());
+      RNFetchBlob.fs.scanFile([{path: res.path(), mime: 'image/jpg'}]);
+    })
+    .then(() => {
+      // scan file success
+      console.log('suceess');
+    })
+    .catch(err => {
+      // scan file error
+      console.log('err : ', err);
+    });
+};
+
+export const androidDownloadManager = (fileLink: string) => {
+  RNFetchBlob.config({
+    // android only options, these options be a no-op on IOS
+    addAndroidDownloads: {
+      useDownloadManager: true,
+      notification: true, // 다운로드 완료 푸시알림 표시 여부
+      path: `${RNFetchBlob.fs.dirs.DownloadDir}/test.jpg`,
+      // 아래는 옵셔널이지만, 안적으면 확장자가 없을 때에는 에러나므로 적어주는 것을 추천함.
+      mime: 'image/jpg',
+      description: 'Your test reports.',
+    },
+  })
+    .fetch('GET', fileLink)
+    .then(resp => {
+      // the path of downloaded file
+      resp.path();
     });
 };
