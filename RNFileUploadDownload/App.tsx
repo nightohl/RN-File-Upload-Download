@@ -5,8 +5,8 @@ import {
   base64,
   tmpFileNoExt,
   tmpFileWithExt,
-  iosFileDownload,
-  iosFileDownloadOpenDocument,
+  iosOpenDocument,
+  iosPreviewDocument,
   androidMediaScanner,
   androidDownloadManager,
   requestStorageWritePermission,
@@ -17,16 +17,6 @@ import TextButton from './src/components/TextButton';
 const App = () => {
   const imageLink =
     'https://thumbs.dreamstime.com/z/environment-earth-day-hands-trees-growing-seedlings-bokeh-green-background-female-hand-holding-tree-nature-field-gra-130247647.jpg';
-  const onBase64Download = () => base64(imageLink);
-  const onTmpFileNoExtDownload = () => tmpFileNoExt(imageLink);
-  const onTmpFileWithExtDownload = () => tmpFileWithExt(imageLink);
-
-  const onIosFileDownload = () => iosFileDownload(imageLink);
-  const onIosFileDownloadOpenDocument = () =>
-    iosFileDownloadOpenDocument(imageLink);
-
-  const onAndroidMediaScanner = () => androidMediaScanner(imageLink);
-  const onAndroidDownloadManager = () => androidDownloadManager(imageLink);
 
   return (
     <SafeAreaView style={styles.rootContainer}>
@@ -34,35 +24,35 @@ const App = () => {
         <Text style={styles.title}>Download</Text>
         <TextButton
           title="- base64 encoded string"
-          onPress={onBase64Download}
+          onPress={() => base64(imageLink)}
         />
         <TextButton
           title="- tmp file with no extension"
-          onPress={onTmpFileNoExtDownload}
+          onPress={() => tmpFileNoExt(imageLink)}
         />
         <TextButton
           title="- tmp file with extension"
-          onPress={onTmpFileWithExtDownload}
+          onPress={() => tmpFileWithExt(imageLink)}
         />
         <TextButton
           title="- ios openDocument"
-          onPress={onIosFileDownloadOpenDocument}
+          onPress={() => iosOpenDocument(imageLink)}
         />
         <TextButton
           title="- ios preview document"
-          onPress={onIosFileDownload}
+          onPress={() => iosPreviewDocument(imageLink)}
         />
         <TextButton
           title="- android media scanner"
-          onPress={onAndroidMediaScanner}
+          onPress={() => androidMediaScanner(imageLink)}
         />
         <TextButton
           title="- android DownloadManager"
-          onPress={onAndroidDownloadManager}
+          onPress={() => androidDownloadManager(imageLink)}
         />
         <TextButton
           title="- android storage write permission"
-          onPress={requestStorageWritePermission}
+          onPress={() => requestStorageWritePermission}
         />
       </View>
     </SafeAreaView>

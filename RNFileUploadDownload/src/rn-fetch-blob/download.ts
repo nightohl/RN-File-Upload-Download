@@ -53,7 +53,7 @@ export const tmpFileWithExt = (fileLink: string) =>
     });
 
 // tmp파일로 저장하고, 화면에 보여줌 (공유 눌러서 이미지 저장 가능)
-export const iosFileDownloadOpenDocument = (fileLink: string) =>
+export const iosOpenDocument = (fileLink: string) =>
   RNFetchBlob.config({
     fileCache: true,
     appendExt: 'jpg', // ImageView 컴포넌트에 첨부할 때 확장자가 있어야하므로, 'jpg', 'png' 등 확장자 추가
@@ -74,7 +74,7 @@ export const iosFileDownloadOpenDocument = (fileLink: string) =>
     });
 
 // tmp파일로 저장하고, 미리보기 화면을 띄워서 저장할 것인지 선택하게함.
-export const iosFileDownload = (fileLink: string) => {
+export const iosPreviewDocument = (fileLink: string) => {
   const {dirs} = RNFetchBlob.fs;
 
   const dirToSave = Platform.select({
