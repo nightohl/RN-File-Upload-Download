@@ -52,6 +52,18 @@ export const tmpFileWithExt = (fileLink: string) =>
       console.log('The file saved to ', res.path());
     });
 
+export const tmpFileUsingPath = (fileLink: string) =>
+  RNFetchBlob.config({
+    path: RNFetchBlob.fs.dirs.DocumentDir + '/test.jpg',
+  })
+    .fetch('GET', fileLink, {
+      //some headers ..
+    })
+    .then(res => {
+      // the temp file path
+      console.log('The file saved to ', res.path());
+    });
+
 // tmp파일로 저장하고, 화면에 보여줌 (공유 눌러서 이미지 저장 가능)
 export const iosOpenDocument = (fileLink: string) =>
   RNFetchBlob.config({
@@ -62,6 +74,7 @@ export const iosOpenDocument = (fileLink: string) =>
       //some headers ..
     })
     .then(resp => {
+      console.log(resp.path());
       RNFetchBlob.ios.openDocument(resp.data);
     })
     .catch((errorMessage, statusCode): void => {
