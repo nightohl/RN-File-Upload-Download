@@ -2,8 +2,9 @@ import {Platform, PermissionsAndroid} from 'react-native';
 import RNFetchBlob from 'rn-fetch-blob';
 
 // send http request in a new thread (using native code)
-export const base64 = (fileLink: string) =>
+export const base64 = (fileLink: string) => {
   RNFetchBlob.fetch('GET', fileLink)
+
     .then(res => {
       let status = res.info().status;
       console.log('status : ', status);
@@ -24,8 +25,9 @@ export const base64 = (fileLink: string) =>
     .catch((errorMessage, statusCode) => {
       // error handling
     });
+};
 
-export const tmpFileNoExt = (fileLink: string) =>
+export const tmpFileNoExt = (fileLink: string) => {
   RNFetchBlob.config({
     // add this option that makes response data to be stored as a file,
     // this is much more performant.
@@ -34,12 +36,14 @@ export const tmpFileNoExt = (fileLink: string) =>
     .fetch('GET', fileLink, {
       //some headers ..
     })
+
     .then(res => {
       // the temp file path
       console.log('The file saved to ', res.path());
     });
+};
 
-export const tmpFileWithExt = (fileLink: string) =>
+export const tmpFileWithExt = (fileLink: string) => {
   RNFetchBlob.config({
     fileCache: true,
     appendExt: 'jpg', // ImageView 컴포넌트에 첨부할 때 확장자가 있어야하므로, 'jpg', 'png' 등 확장자 추가
@@ -47,25 +51,29 @@ export const tmpFileWithExt = (fileLink: string) =>
     .fetch('GET', fileLink, {
       //some headers ..
     })
+
     .then(res => {
       // the temp file path
       console.log('The file saved to ', res.path());
     });
+};
 
-export const tmpFileUsingPath = (fileLink: string) =>
+export const tmpFileUsingPath = (fileLink: string) => {
   RNFetchBlob.config({
     path: RNFetchBlob.fs.dirs.DocumentDir + '/test.jpg',
   })
     .fetch('GET', fileLink, {
       //some headers ..
     })
+
     .then(res => {
       // the temp file path
       console.log('The file saved to ', res.path());
     });
+};
 
 // tmp파일로 저장하고, 화면에 보여줌 (공유 눌러서 이미지 저장 가능)
-export const iosOpenDocument = (fileLink: string) =>
+export const iosOpenDocument = (fileLink: string) => {
   RNFetchBlob.config({
     fileCache: true,
     appendExt: 'jpg', // ImageView 컴포넌트에 첨부할 때 확장자가 있어야하므로, 'jpg', 'png' 등 확장자 추가
@@ -75,7 +83,7 @@ export const iosOpenDocument = (fileLink: string) =>
     })
     .then(resp => {
       console.log(resp.path());
-      RNFetchBlob.ios.openDocument(resp.data);
+      // RNFetchBlob.ios.openDocument(resp.data);
     })
     .catch((errorMessage, statusCode): void => {
       console.log(
@@ -85,6 +93,7 @@ export const iosOpenDocument = (fileLink: string) =>
         errorMessage,
       );
     });
+};
 
 // tmp파일로 저장하고, 미리보기 화면을 띄워서 저장할 것인지 선택하게함.
 export const iosPreviewDocument = (fileLink: string) => {
@@ -122,10 +131,6 @@ export const androidMediaScanner = (fileLink: string) => {
     .then(res => {
       console.log('result path : ', res.path());
       RNFetchBlob.fs.scanFile([{path: res.path(), mime: 'image/jpg'}]);
-    })
-    .then(() => {
-      // scan file success
-      console.log('suceess');
     })
     .catch(err => {
       // scan file error
