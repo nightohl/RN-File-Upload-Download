@@ -1,5 +1,13 @@
-import React from 'react';
-import {SafeAreaView, StyleSheet, View, Text} from 'react-native';
+import React, {useState} from 'react';
+import {
+  SafeAreaView,
+  StyleSheet,
+  View,
+  Text,
+  Dimensions,
+  Modal,
+  TouchableWithoutFeedback,
+} from 'react-native';
 
 import Description from './src/components/Description';
 
@@ -15,16 +23,27 @@ import {
   requestStorageWritePermission,
 } from './src/rn-fetch-blob/download';
 
-import {
-  DropboxSingleUpload,
-  DropboxMultipleUpload,
-} from './src/rn-fetch-blob/upload';
+import {DropboxSingleUpload, MultiFormUpload} from './src/rn-fetch-blob/upload';
 
 import TextButton from './src/components/TextButton';
+import ProgressBar from './ProgressBar';
 
 const App = () => {
+  const [visible, setVisible] = useState(false);
+  const onRequestClose = () => setVisible(false);
+  const [percent, setPercent] = useState(0);
+
+  const preventParentEvent = (e: any) => e.stopPropagation();
+
   const imageLink =
     'https://thumbs.dreamstime.com/z/environment-earth-day-hands-trees-growing-seedlings-bokeh-green-background-female-hand-holding-tree-nature-field-gra-130247647.jpg';
+
+  const onInit = () => {
+    setVisible(true);
+    setPercent(0);
+  };
+  const onProgress = (pct: number) => setPercent(pct);
+  const onEnd = () => setVisible(false);
 
   return (
     <SafeAreaView style={styles.rootContainer}>
@@ -74,7 +93,13 @@ const App = () => {
         />
         <TextButton
           title="- single file upload"
-          onPress={() => DropboxSingleUpload()}
+          onPress={() =>
+            DropboxSingleUpload({
+              onInit,
+              onProgress,
+              onEnd,
+            })
+          }
         />
         <Description
           text={
@@ -84,9 +109,28 @@ const App = () => {
         />
         <TextButton
           title="- muliple file upload"
-          onPress={() => DropboxMultipleUpload()}
+          onPress={() => MultiFormUpload()}
         />
       </View>
+      <Modal
+        transparent
+        visible={visible}
+        onRequestClose={onRequestClose}
+        animationType="slide">
+        <TouchableWithoutFeedback onPress={onRequestClose}>
+          <View style={modalStyles.modalContainer}>
+            <TouchableWithoutFeedback onPress={preventParentEvent}>
+              <View style={modalStyles.modalWrapper}>
+                <Text style={modalStyles.modalTitle}>Download Video</Text>
+                <Text style={modalStyles.modalSubTitle}>
+                  please wait until download finish, don't close the app
+                </Text>
+                <ProgressBar progress={percent} backgroundColor="#fafafa" />
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -108,6 +152,48 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     alignSelf: 'center',
     padding: 10,
+  },
+});
+
+const modalStyles = StyleSheet.create({
+  modalTitle: {
+    fontSize: 20,
+    marginBottom: 16,
+    fontWeight: 'bold',
+  },
+  modalSubTitle: {
+    color: '#333',
+    fontSize: 13,
+    marginBottom: 16,
+  },
+  modalHint: {
+    color: '#333',
+    fontSize: 13,
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+
+  modalWrapper: {
+    paddingHorizontal: 16 * 2,
+    paddingVertical: 20,
+    width: Dimensions.get('window').width - 2 * 16,
+    backgroundColor: '#fff',
+    borderRadius: 4,
+    elevation: 2,
+    shadowColor: 'rgba(0,0,0,0.5)',
+    shadowOffset: {
+      height: 0,
+      width: 0,
+    },
+    shadowOpacity: 1,
+    shadowRadius: 4,
+  },
+  modalContainer: {
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.2)',
+    flex: 1,
+    justifyContent: 'center',
+    position: 'relative',
   },
 });
 
