@@ -2,6 +2,7 @@ import {Platform} from 'react-native';
 import RNFetchBlob from 'rn-fetch-blob';
 import {dropbox} from './../config/token';
 import DocumentPicker from 'react-native-document-picker';
+import {OnInit, OnProgress, OnEnd} from './types';
 
 async function SingleFileSelector() {
   // Pick a single file
@@ -53,15 +54,11 @@ async function MultiFileSelector() {
   }
 }
 
-export async function DropboxSingleUpload({
-  onInit,
-  onProgress,
-  onEnd,
-}: {
-  onInit: () => void;
-  onProgress: (percent: number) => void;
-  onEnd: () => void;
-}): Promise<void> {
+export async function DropboxSingleUpload(
+  onInit: OnInit,
+  onProgress: OnProgress,
+  onEnd: OnEnd,
+): Promise<void> {
   const result = await SingleFileSelector(); // cancel 했으면 undefined가 반환됨.
   console.log('uri 마지막 확인 : ', result?.uri);
   // 정상 업로드됨  RNFetchBlob.wrap('/Users/night-ohl/Library/Developer/CoreSimulator/Devices/876161EC-19AE-4CFB-8B00-9298D3D3D9BC/data/Containers/Data/Application/C754BFAD-F9F7-4531-A7FD-0D66AADA76AB/Documents/RNFetchBlob_tmp/RNFetchBlobTmp_pyo5s724nuh0j6mn9dyqlz7.jpg')
